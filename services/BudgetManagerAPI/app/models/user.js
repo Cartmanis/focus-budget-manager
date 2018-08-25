@@ -22,7 +22,7 @@ const Schema = mongoose.Schema({
     Финансовый документ включает такие данные, как его состояние (state), 
     заголовок (title), элементы (items) и цена (price).
     */    
-})
+});
 
 /*middleware для сохранения хеша в поле password */
 
@@ -43,7 +43,7 @@ Schema.pre('save', function(next) {
     } else {
         return next();
     }
-})
+});
 
 //Метод, для сравнения пароля правомерности доступа пользователя в системе
 Schema.methods.comparePassword = function (password, callback) {

@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const config = require('./../../BudgetManagerAPI/config/index.js')
+const config = require('../../config')
 
 const api = {}; //объект с публичным api
 
@@ -13,17 +13,17 @@ api.login = (User) => (req, res) => {
         if (err) throw err;
 
         if(!user) {
-            res.status(401).send({success: false, message: `Сбой авторизации: 
-            Пользователь не найден`});
+            res.status(401).send({success: false, message: `Сбой авторизации: Пользователь не найден`});
         } else {
             user.comparePassword(req.body.password, (err, mathes) => {
                 if(err) throw err;
-                if(!mathes) {
+                if(mathes) {
+                    const token = jwt.sign({user}, config.secret); //получили токен пользователя
+                    res.json({success: true, message: 'Token granted', token });
+                } else {
                     res.status(401).send({success: false, message: 
-                    `Сбой авторизации: Неверный пароль`});
-                }
-                const token = jwt.sign({user}, config.secret); //получили токен пользователя
-                res.json({success: true, message: 'Token granted', token });
+                        `Сбой авторизации: Неверный пароль`});
+                }                
             })
         }
     })
@@ -33,8 +33,10 @@ api.login = (User) => (req, res) => {
 api.veify = (headers) => {
     if(headers && headers.autorization) {
         const split = headers.autorization.split(' ');
-        if(split.length ===2) return split[1];
-
+        if(split.length ===2) {
+            console.log(split[1]);
+            return split[1];
+        } 
         return null;
     }
     return null;

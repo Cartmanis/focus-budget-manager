@@ -1,6 +1,6 @@
 /*Конфигурационный файл создания express сервера */
 
-const express = require('express'),
+const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -36,10 +36,10 @@ app.use(function(req, res, next) {
 */
 
 //для организации автозагрузки скриптов
-consign({cwd: 'sevices'})
+ consign({cwd: 'services'})
     .include("BudgetManagerAPI/app/setup")
-    .then("BudgetManager/app/api")
-    .then("BudgetManager/app/routes")
-    .info(app);
+    .then("BudgetManagerAPI/app/api")
+    .then("BudgetManagerAPI/app/routes")
+    .into(app); 
 
 module.exports = app;

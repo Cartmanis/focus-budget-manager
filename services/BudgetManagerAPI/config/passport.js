@@ -2,7 +2,7 @@
 
 const PassportJWT = require('passport-jwt'); //для организации аутенификации
 const config = require('./index.js'); //основной файл конфигурации
-const models = require('./services/BudgetManagerAPI/app/setup'); //модели
+const models = require('../../BudgetManagerAPI/app/setup'); //модели
 
 const ExtractJWT = PassportJWT.ExtractJwt;
 const Strategy = PassportJWT.Strategy;
