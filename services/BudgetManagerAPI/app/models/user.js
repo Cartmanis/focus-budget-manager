@@ -28,33 +28,36 @@ const Schema = mongoose.Schema({
 
 /* Здесь не будем пользоваться стрелочными функциями 
 из-за автоматической привязки к лексической области видимости*/
-Schema.pre('save', function(next) {
+Schema.pre('save', async function(next) {
     const user = this; //запоминаем контекст this- пользователя
     if(this.isModified('password') || this.isNew) {
-        bcrypt.genSalt(10, (err, salt) => {
-            if(err) return next(err);
-            bcrypt.hash(user.password, salt, (err, hash) => {
-                if(err) return next(err);
-                //полученный в итоге хеш сохраняем в password
-                user.password = hash; 
-                    next();
-            })
-        })
+        try{
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(user.password, salt);
+            user.password = hash;
+            next(); 
+        } catch(err) {
+            next(err);
+        }
     } else {
         return next();
-    }
+    }        
 });
 
 //Метод, для сравнения пароля правомерности доступа пользователя в системе
-Schema.methods.comparePassword = function (password, callback) {
+Schema.methods.comparePassword = function (password) {
     //pasword - пароль введенный пользователем
-    //this.pasword - хеш пароль, хранящейся в базе данных
-    bcrypt.compare(password, this.password, (err, matches) => {
-      if (err) return callback(error);
-
-      //результат сравнения matches передаём в callback
-      callback(null, matches);
-    });
+    //this.pasword - хеш пароль, хранящейся в базе данных     
+    return new Promise((resolve, reject) => {
+        (async () => {
+            try{
+                matches = await bcrypt.compare(password, this.password);
+                resolve(matches);
+            } catch (err) {
+                reject(err);
+            }
+        })();        
+    });           
 };
 
 //наконец создаём саму модель User из полученной схемы

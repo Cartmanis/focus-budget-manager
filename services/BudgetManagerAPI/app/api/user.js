@@ -25,7 +25,6 @@ api.createAdmin = (User) => (req, res) => {
 api.getUsers = (User, BudgetToken) => (req, res) => {
     const token = BudgetToken;
     //если token присутсвует ???, то ищем всех пользователей из БД
-    console.log(token);
     if(token) {
         User.find({}, (err, users) => {
             if(err) throw err;
