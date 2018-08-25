@@ -1,5 +1,6 @@
 /*Публичный api для работы с пользователями - создание, выборка, удаление пользователей...*/
 const mongoose = require('mongoose');
+const config = require('../../config');
 
 const api = {};
 
@@ -25,7 +26,8 @@ api.createAdmin = (User) => (req, res) => {
 api.getUsers = (User, BudgetToken) => (req, res) => {
     const token = BudgetToken;
     //если token присутсвует ???, то ищем всех пользователей из БД
-    console.log(token);
+    console.log('token:' + token);
+    console.log("config.session: " + config.session.session);
     if(token) {
         User.find({}, (err, users) => {
             if(err) throw err;

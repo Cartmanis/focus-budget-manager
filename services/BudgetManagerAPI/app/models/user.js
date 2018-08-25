@@ -28,6 +28,7 @@ const Schema = mongoose.Schema({
 
 /* Здесь не будем пользоваться стрелочными функциями 
 из-за автоматической привязки к лексической области видимости*/
+
 Schema.pre('save', function(next) {
     const user = this; //запоминаем контекст this- пользователя
     if(this.isModified('password') || this.isNew) {
@@ -38,8 +39,8 @@ Schema.pre('save', function(next) {
                 //полученный в итоге хеш сохраняем в password
                 user.password = hash; 
                     next();
-            })
-        })
+            });
+        });
     } else {
         return next();
     }

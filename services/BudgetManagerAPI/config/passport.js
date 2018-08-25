@@ -21,6 +21,7 @@ module.exports = (passport) => {
         User.findOne({id: payload.id}, (err, user) => {
             if(err) return done(err, false);
             if (user) {
+                console.log(user);
                 done(null, user);
             } else {
                 done(null, false);

@@ -12,7 +12,7 @@ module.exports = (app) => {
         .post(api.createAdmin(models.User));
 
         //проверяем аутенификацию и возвращаем всех пользователей
-    app.route('/api/v1/users')
+    app.route('/api/v1/users')        
         .get(passport.authenticate('jwt', config.session),
         api.getUsers(models.User, app.get('SomeSecretKey')));
 
