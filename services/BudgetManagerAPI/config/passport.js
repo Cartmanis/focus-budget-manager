@@ -17,14 +17,16 @@ module.exports = (passport) => {
     };
     
     //находим пользователя по JWT токену полученному от клиента
-    passport.use(new Strategy(parameters, (payload, done) => {
-        User.findOne({id: payload.id}, (err, user) => {
-            if(err) return done(err, false);
-            if (user) {
+     passport.use(new Strategy(parameters, async (payload, done) => {
+        try {
+            const user = await User.findOne({id: payload.id});
+            if(user) {
                 done(null, user);
             } else {
                 done(null, false);
-            }                
-        });
-    }));
+            }            
+        } catch(err) {
+            return done(err, false);
+        }
+    })); 
 }
